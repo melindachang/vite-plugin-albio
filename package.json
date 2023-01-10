@@ -1,0 +1,27 @@
+{
+  "name": "vite-plugin-albio",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/melindachang/vite-plugin-albio.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/melindachang/vite-plugin-albio/issues"
+  },
+  "homepage": "https://github.com/melindachang/vite-plugin-albio#readme",
+  "devDependencies": {
+    "albio": "^1.0.2",
+    "prettier": "^2.8.2",
+    "rimraf": "^3.0.2",
+    "rollup": "^3.9.1",
+    "vite": "^4.0.4",
+    "vitest": "^0.27.0"
+  }
+}
