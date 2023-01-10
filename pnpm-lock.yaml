@@ -1,7 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
-  albio: ^1.0.10
+  albio: ^1.0.13
   prettier: ^2.8.2
   rimraf: ^3.0.2
   rollup: ^3.9.1
@@ -9,7 +9,7 @@ specifiers:
   vitest: ^0.27.0
 
 devDependencies:
-  albio: 1.0.10
+  albio: 1.0.13
   prettier: 2.8.2
   rimraf: 3.0.2
   rollup: 3.9.1
@@ -249,8 +249,8 @@ packages:
     hasBin: true
     dev: true
 
-  /albio/1.0.10:
-    resolution: {integrity: sha512-dlU4O5Hhl2z5znAGdmRNmpdjOUes9hM4V1FB0Rbzm4Ig2dglAWbCwthNd2wig0gTZghlp0rpB8RPWeS/lBrogQ==}
+  /albio/1.0.13:
+    resolution: {integrity: sha512-QKuV5QQTF5TgN3OOzpHLr2haknO5uU7PQ1dXH6X0QJ/cJxwuOcrv+QWu6QV3siypFyed7dT70wnYXsLqoT1TaQ==}
     engines: {node: '>= 8'}
     dependencies:
       code-red: 0.2.5
