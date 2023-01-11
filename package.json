@@ -17,7 +17,9 @@
   },
   "homepage": "https://github.com/melindachang/vite-plugin-albio#readme",
   "devDependencies": {
-    "albio": "^1.0.13",
+    "@types/estree": "^1.0.0",
+    "albio": "^1.0.17",
+    "parse5": "^7.1.2",
     "prettier": "^2.8.2",
     "rimraf": "^3.0.2",
     "rollup": "^3.9.1",
