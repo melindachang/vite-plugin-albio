@@ -1,26 +1,34 @@
-import { Plugin, IndexHtmlTransformContext } from 'vite';
-import { parse_module, record_entry } from './compile';
-import path from 'path';
+import { Plugin, ResolvedConfig } from 'vite';
+import { AlbioOptions } from './interfaces';
+import { generate_base, parse_module, record_entry } from './compile';
+import { basename, extname } from 'path';
 
-export const albio = (): Plugin => {
+export const albio = (opts: AlbioOptions = null): Plugin => {
+  let viteConfig: ResolvedConfig;
+
   return {
     name: 'vite-plugin-albio',
     enforce: 'pre',
-    transform: (code: string, id: string) => {
+    configResolved: (resolvedConfig) => {
+      viteConfig = resolvedConfig;
+    },
+    transform: (code: string, id: string): void => {
       if (id.endsWith('.html')) {
         record_entry(code, id);
       } else if (id.endsWith('.js')) {
         parse_module(code, id);
       }
     },
-    transformIndexHtml: (html: string, ctx: IndexHtmlTransformContext): string => {
+    transformIndexHtml: (html, ctx): string => {
       const head = html.match(/<head[^>]*>[\s\S]*<\/head>/gi);
       const scripts: string[] = [
-        `<script src="${path
-          .basename(ctx.path, path.extname(ctx.path))}.js" type="module"></script>`,
+        `<script src="${basename(ctx.path, extname(ctx.path))}.js" type="module"></script>`,
         '<script>registerComponent()\nmountComponent()</script>',
       ];
       return `<!DOCTYPE html><html>${head}<body>${scripts.join('')}</body></html>`;
+    },
+    closeBundle: (): void => {
+      generate_base(viteConfig.build.outDir ? viteConfig.build.outDir : 'dist');
     },
   };
 };
