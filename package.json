@@ -8,9 +8,8 @@
   },
   "exports": {
     ".": {
-      "import": "./dist/index.js"
-    },
-    "./package.json": "./package.json"
+      "import": "./dist/index.mjs"
+    }
   },
   "repository": {
     "type": "git",
