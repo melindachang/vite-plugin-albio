@@ -13,9 +13,10 @@ import { normalizePath } from 'vite';
 
 export const entry_points: Entry[] = [];
 
-export const record_entry = (html: string, ctx: string) => {
-  const body = extractFragment(html);
+export const record_entry = (code: string, ctx: string) => {
+  const body = extractFragment(code);
   let { source, linkedModules } = parseCode(body.script);
+  console.log(body.tags);
   const { nodes, listeners } = parseHtml(body.tags);
   const relativePath = normalizePath(path.relative(__dirname, ctx));
 
@@ -33,10 +34,10 @@ export const record_entry = (html: string, ctx: string) => {
 export const parse_module = (code: string, id: string) => {
   entry_points.forEach((entry) => {
     entry.modules.forEach((module) => {
-      let i = module.attrs.findIndex((attr) => attr.name === 'src');
+      let i = Object.keys(module.attribs).findIndex((attr) => attr[0] === 'src');
       if (
         i > -1 &&
-        normalizePath(path.relative(entry.path, id)) === normalizePath(module.attrs[i].value)
+        normalizePath(path.relative(entry.path, id)) === normalizePath(module.attribs[i])
       ) {
         entry.script += code;
         let { props, reactives, residuals } = extractScripts(getProgram(entry.script));

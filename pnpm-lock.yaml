@@ -2,7 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@types/estree': ^1.0.0
-  albio: ^1.0.17
+  albio: ^1.0.21
   esbuild: ^0.16.16
   prettier: ^2.8.2
   rimraf: ^3.0.2
@@ -13,7 +13,7 @@ specifiers:
 
 devDependencies:
   '@types/estree': 1.0.0
-  albio: 1.0.17
+  albio: 1.0.21
   esbuild: 0.16.16
   prettier: 2.8.2
   rimraf: 3.0.2
@@ -257,12 +257,12 @@ packages:
     hasBin: true
     dev: true
 
-  /albio/1.0.17:
-    resolution: {integrity: sha512-pfaVuq8g59wbsr293SJMMJooz/0cIzYE0TcoReuZgvcsXEVW2q+/+tBezPYWTpulN071h438Xi1v60VBFTMyjg==}
+  /albio/1.0.21:
+    resolution: {integrity: sha512-py4ceBDlDWhfOkYPxZhIoU40v4ZbFa8792KfZQqA3xOkr4SkhLx54+ltDuYFSXBnYGLDzuMVD0VVpANye+VjrA==}
     engines: {node: '>= 8'}
     dependencies:
       code-red: 0.2.5
-      parse5: 7.1.2
+      domhandler: 5.0.3
       periscopic: 3.0.4
     dev: true
 
@@ -400,9 +400,15 @@ packages:
       path-type: 4.0.0
     dev: true
 
-  /entities/4.4.0:
-    resolution: {integrity: sha512-oYp7156SP8LkeGD0GF85ad1X9Ai79WtRsZ2gxJqtBuzH+98YUV6jkHEKlZkMbcrjJjIVJNIDP/3WL9wQkoPbWA==}
-    engines: {node: '>=0.12'}
+  /domelementtype/2.3.0:
+    resolution: {integrity: sha512-OLETBj6w0OsagBwdXnPdN0cnMfF9opN69co+7ZrbfPGrdpPVNBUj02spi6B1N7wChLQiPn4CSH/zJvXw56gmHw==}
+    dev: true
+
+  /domhandler/5.0.3:
+    resolution: {integrity: sha512-cgwlv/1iFQiFnU96XXgROh8xTeetsnJiDsTc7TYCLFd9+/WNkIqPTxiM/8pSd8VIrhXGTf1Ny1q1hquVqDJB5w==}
+    engines: {node: '>= 4'}
+    dependencies:
+      domelementtype: 2.3.0
     dev: true
 
   /esbuild/0.11.23:
@@ -712,12 +718,6 @@ packages:
     engines: {node: '>=6'}
     dependencies:
       mimic-fn: 2.1.0
-    dev: true
-
-  /parse5/7.1.2:
-    resolution: {integrity: sha512-Czj1WaSVpaoj0wbhMzLmWD69anp2WH7FXMB9n1Sy8/ZFF9jolSQVMu1Ij5WIyGmcBmhk7EOndpO4mIpihVqAXw==}
-    dependencies:
-      entities: 4.4.0
     dev: true
 
   /path-is-absolute/1.0.1:
