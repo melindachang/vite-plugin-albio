@@ -3,18 +3,18 @@ import { AlbioOptions } from './interfaces';
 import { generate_base, parse_module, record_entry } from './compile';
 import { basename, extname } from 'path';
 
-export const albio = (opts: AlbioOptions = null): Plugin => {
-  let viteConfig: ResolvedConfig;
+let viteConfig: ResolvedConfig;
 
-  return {
-    name: 'vite-plugin-albio',
+export const albio = (opts: AlbioOptions = null): Plugin[] => [
+  {
+    name: 'vite:albio-preprocess',
     enforce: 'pre',
     configResolved: (resolvedConfig) => {
       viteConfig = resolvedConfig;
     },
     transform: (code: string, id: string): void => {
       if (id.endsWith('.html')) {
-        record_entry(code, id);
+        record_entry(code, id, viteConfig.root);
       } else if (id.endsWith('.js')) {
         parse_module(code, id);
       }
@@ -27,8 +27,12 @@ export const albio = (opts: AlbioOptions = null): Plugin => {
       ];
       return `<!DOCTYPE html><html>${head}<body>${scripts.join('')}</body></html>`;
     },
+  },
+  {
+    name: 'vite:albio-postprocess',
+    enforce: 'post',
     closeBundle: (): void => {
-      generate_base(viteConfig.build.outDir ? viteConfig.build.outDir : 'dist');
-    },
-  };
-};
+      generate_base(viteConfig.build.outDir ? viteConfig.build.outDir : 'dist', viteConfig.root);
+    }
+  },
+];

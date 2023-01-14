@@ -13,12 +13,11 @@ import { normalizePath } from 'vite';
 
 export const entry_points: Entry[] = [];
 
-export const record_entry = (code: string, ctx: string) => {
+export const record_entry = (code: string, ctx: string, root: string) => {
   const body = extractFragment(code);
   let { source, linkedModules } = parseCode(body.script);
-  console.log(body.tags);
   const { nodes, listeners } = parseHtml(body.tags);
-  const relativePath = normalizePath(path.relative(__dirname, ctx));
+  const relativePath = normalizePath(path.relative(root, ctx));
 
   const newEntry: Entry = {
     path: ctx,
@@ -49,10 +48,10 @@ export const parse_module = (code: string, id: string) => {
   });
 };
 
-export const generate_base = (outDir: string) => {
+export const generate_base = (outDir: string, root: string) => {
   entry_points.forEach((entry) => {
     entry.compiler.generate();
     const finalCode = entry.compiler.astToString();
-    writeFileSync(path.join(outDir, entry.relativePath.replace('.html', '.js')), finalCode);
+    writeFileSync(path.join(root, outDir, entry.relativePath.replace('.html', '.js')), finalCode);
   });
 };
