@@ -23,7 +23,10 @@ export const albio = (opts: AlbioOptions = null): Plugin[] => [
       const head = html.match(/<head[^>]*>[\s\S]*<\/head>/gi);
       const scripts: string[] = [
         `<script src="${basename(ctx.path, extname(ctx.path))}.js" type="module"></script>`,
-        '<script>registerComponent()\nmountComponent()</script>',
+        `<script>import { registerComponent, mountComponent } from "${basename(
+          ctx.path,
+          extname(ctx.path),
+        )}";\nregisterComponent()\nmountComponent()</script>`,
       ];
       return `<!DOCTYPE html><html>${head}<body>${scripts.join('')}</body></html>`;
     },
@@ -33,6 +36,6 @@ export const albio = (opts: AlbioOptions = null): Plugin[] => [
     enforce: 'post',
     closeBundle: (): void => {
       generate_base(viteConfig.build.outDir ? viteConfig.build.outDir : 'dist', viteConfig.root);
-    }
+    },
   },
 ];

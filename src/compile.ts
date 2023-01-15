@@ -33,10 +33,11 @@ export const record_entry = (code: string, ctx: string, root: string) => {
 export const parse_module = (code: string, id: string) => {
   entry_points.forEach((entry) => {
     entry.modules.forEach((module) => {
-      let i = Object.keys(module.attribs).findIndex((attr) => attr[0] === 'src');
+      let i = Object.keys(module.attribs).findIndex((attr) => attr === 'src');
       if (
         i > -1 &&
-        normalizePath(path.relative(entry.path, id)) === normalizePath(module.attribs[i])
+        normalizePath(path.relative(path.dirname(entry.path), id)) ===
+          normalizePath(module.attribs['src'])
       ) {
         entry.script += code;
         let { props, reactives, residuals } = extractScripts(getProgram(entry.script));
