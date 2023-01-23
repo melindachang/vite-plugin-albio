@@ -2,6 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@types/estree': ^1.0.0
+  '@types/node': ^18.11.18
   albio: ^1.0.26
   esbuild: ^0.16.17
   prettier: ^2.8.3
@@ -14,6 +15,7 @@ specifiers:
 
 devDependencies:
   '@types/estree': 1.0.0
+  '@types/node': 18.11.18
   albio: 1.0.26
   esbuild: 0.16.17
   prettier: 2.8.3
@@ -21,7 +23,7 @@ devDependencies:
   rollup: 3.10.0
   tsup-node: 0.1.0_typescript@4.9.4
   typescript: 4.9.4
-  vite: 4.0.4
+  vite: 4.0.4_@types+node@18.11.18
   vitefu: 0.2.4_vite@4.0.4
 
 packages:
@@ -251,6 +253,10 @@ packages:
 
   /@types/estree/1.0.0:
     resolution: {integrity: sha512-WulqXMDUTYAXCjZnk6JtIHPigp55cVtDgDrO2gHRwhyJto21+1zbVCtOYB2L1F9w4qCQ0rOGWBnBe0FNTiEJIQ==}
+    dev: true
+
+  /@types/node/18.11.18:
+    resolution: {integrity: sha512-DHQpWGjyQKSHj3ebjFI/wRKcqQcdR+MoFBygntYOZytCqNfkd2ZC4ARDJ2DQqhjH5p85Nnd3jhUJIXrszFX/JA==}
     dev: true
 
   /acorn/8.8.1:
@@ -977,7 +983,7 @@ packages:
     hasBin: true
     dev: true
 
-  /vite/4.0.4:
+  /vite/4.0.4_@types+node@18.11.18:
     resolution: {integrity: sha512-xevPU7M8FU0i/80DMR+YhgrzR5KS2ORy1B4xcX/cXLsvnUWvfHuqMmVU6N0YiJ4JWGRJJsLCgjEzKjG9/GKoSw==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
@@ -1002,6 +1008,7 @@ packages:
       terser:
         optional: true
     dependencies:
+      '@types/node': 18.11.18
       esbuild: 0.16.17
       postcss: 8.4.21
       resolve: 1.22.1
@@ -1018,7 +1025,7 @@ packages:
       vite:
         optional: true
     dependencies:
-      vite: 4.0.4
+      vite: 4.0.4_@types+node@18.11.18
     dev: true
 
   /which/2.0.2:

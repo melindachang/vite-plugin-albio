@@ -37,6 +37,7 @@
   },
   "devDependencies": {
     "@types/estree": "^1.0.0",
+    "@types/node": "^18.11.18",
     "albio": "^1.0.26",
     "esbuild": "^0.16.17",
     "prettier": "^2.8.3",
