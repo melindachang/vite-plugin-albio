@@ -10,6 +10,7 @@ specifiers:
   tsup-node: ^0.1.0
   typescript: ^4.9.4
   vite: ^4.0.4
+  vitefu: ^0.2.4
 
 devDependencies:
   '@types/estree': 1.0.0
@@ -21,6 +22,7 @@ devDependencies:
   tsup-node: 0.1.0_typescript@4.9.4
   typescript: 4.9.4
   vite: 4.0.4
+  vitefu: 0.2.4_vite@4.0.4
 
 packages:
 
@@ -1006,6 +1008,17 @@ packages:
       rollup: 3.10.0
     optionalDependencies:
       fsevents: 2.3.2
+    dev: true
+
+  /vitefu/0.2.4_vite@4.0.4:
+    resolution: {integrity: sha512-fanAXjSaf9xXtOOeno8wZXIhgia+CZury481LsDaV++lSvcU2R9Ch2bPh3PYFyoHW+w9LqAeYRISVQjUIew14g==}
+    peerDependencies:
+      vite: ^3.0.0 || ^4.0.0
+    peerDependenciesMeta:
+      vite:
+        optional: true
+    dependencies:
+      vite: 4.0.4
     dev: true
 
   /which/2.0.2:

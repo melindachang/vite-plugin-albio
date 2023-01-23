@@ -9,6 +9,4 @@ export interface Entry {
 }
 
 export type AlbioOptions = null | {
-  outDir?: string;
-  minify?: boolean;
 };

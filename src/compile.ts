@@ -13,7 +13,7 @@ import { normalizePath } from 'vite';
 
 export const entry_points: Entry[] = [];
 
-export const record_entry = (code: string, ctx: string, root: string) => {
+export const recordEntry = (code: string, ctx: string, root: string) => {
   const body = extractFragment(code);
   let { source, linkedModules } = parseCode(body.script);
   const { nodes, listeners } = parseHtml(body.tags);
@@ -30,7 +30,7 @@ export const record_entry = (code: string, ctx: string, root: string) => {
   entry_points.push(newEntry);
 };
 
-export const parse_module = (code: string, id: string) => {
+export const parseModule = (code: string, id: string) => {
   entry_points.forEach((entry) => {
     entry.modules.forEach((module) => {
       let i = Object.keys(module.attribs).findIndex((attr) => attr === 'src');
@@ -49,10 +49,12 @@ export const parse_module = (code: string, id: string) => {
   });
 };
 
-export const generate_base = (outDir: string, root: string) => {
+export const generateBase = (outDir: string, root: string, pkgData: Buffer) => {
   entry_points.forEach((entry) => {
     entry.compiler.generate();
     const finalCode = entry.compiler.astToString();
     writeFileSync(path.join(root, outDir, entry.relativePath.replace('.html', '.js')), finalCode);
   });
+
+  writeFileSync(path.join(root, outDir, 'assets', 'albio_internal.js'), pkgData);
 };

@@ -1,6 +1,7 @@
-import { Plugin, ResolvedConfig } from 'vite';
+import { Plugin, ResolvedConfig, optimizeDeps } from 'vite';
 import { AlbioOptions } from './interfaces';
-import { generate_base, parse_module, record_entry } from './compile';
+import fs from 'fs';
+import { generateBase, parseModule, recordEntry } from './compile';
 import { basename, extname } from 'path';
 
 let viteConfig: ResolvedConfig;
@@ -9,24 +10,33 @@ export const albio = (opts: AlbioOptions = null): Plugin[] => [
   {
     name: 'vite:albio-preprocess',
     enforce: 'pre',
+    config: (config) => {
+      if (config.optimizeDeps) {
+        config.optimizeDeps.include
+          ? config.optimizeDeps.include.push('albio/internal')
+          : (config.optimizeDeps.include = ['albio/internal']);
+      } else {
+        config.optimizeDeps = { include: ['albio/internal'] };
+      }
+    },
     configResolved: (resolvedConfig) => {
       viteConfig = resolvedConfig;
     },
     transform: (code: string, id: string): void => {
       if (id.endsWith('.html')) {
-        record_entry(code, id, viteConfig.root);
+        recordEntry(code, id, viteConfig.root);
       } else if (id.endsWith('.js')) {
-        parse_module(code, id);
+        parseModule(code, id);
       }
     },
     transformIndexHtml: (html, ctx): string => {
       const head = html.match(/<head[^>]*>[\s\S]*<\/head>/gi);
       const scripts: string[] = [
         `<script src="${basename(ctx.path, extname(ctx.path))}.js" type="module"></script>`,
-        `<script>import { registerComponent, mountComponent } from "${basename(
+        `<script type="module">import { registerComponent, mountComponent } from "./${basename(
           ctx.path,
           extname(ctx.path),
-        )}";\nregisterComponent()\nmountComponent()</script>`,
+        )}.js";\nregisterComponent()\nmountComponent()</script>`,
       ];
       return `<!DOCTYPE html><html>${head}<body>${scripts.join('')}</body></html>`;
     },
@@ -34,8 +44,19 @@ export const albio = (opts: AlbioOptions = null): Plugin[] => [
   {
     name: 'vite:albio-postprocess',
     enforce: 'post',
-    closeBundle: (): void => {
-      generate_base(viteConfig.build.outDir ? viteConfig.build.outDir : 'dist', viteConfig.root);
+    closeBundle: async (): Promise<void> => {
+      const depMetadata = await optimizeDeps(viteConfig);
+      fs.readFile(depMetadata.optimized['albio/internal'].file, (err, pkgData) => {
+        try {
+          generateBase(
+            viteConfig.build.outDir ? viteConfig.build.outDir : 'dist',
+            viteConfig.root,
+            pkgData,
+          );
+        } catch {
+          console.log(err);
+        }
+      });
     },
   },
 ];
