@@ -36,7 +36,7 @@ export const albio = (opts: AlbioOptions = null): Plugin[] => [
         `<script type="module">import { registerComponent, mountComponent } from "./${basename(
           ctx.path,
           extname(ctx.path),
-        )}.js";\nregisterComponent()\nmountComponent()</script>`,
+        )}.js";\nregisterComponent()\nmountComponent(document.body)</script>`,
       ];
       return `<!DOCTYPE html><html>${head}<body>${scripts.join('')}</body></html>`;
     },
