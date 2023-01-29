@@ -33,10 +33,10 @@ export const albio = (opts: AlbioOptions = null): Plugin[] => [
       const head = html.match(/<head[^>]*>[\s\S]*<\/head>/gi);
       const scripts: string[] = [
         `<script src="${basename(ctx.path, extname(ctx.path))}.js" type="module"></script>`,
-        `<script type="module">import { registerComponent, mountComponent } from "./${basename(
+        `<script type="module">import { registerFragment, mountFragment } from "./${basename(
           ctx.path,
           extname(ctx.path),
-        )}.js";\nregisterComponent()\nmountComponent(document.body)</script>`,
+        )}.js";\nregisterFragment()\nmountFragment(document.body)</script>`,
       ];
       return `<!DOCTYPE html><html>${head}<body>${scripts.join('')}</body></html>`;
     },
