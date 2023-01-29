@@ -3,11 +3,11 @@ lockfileVersion: 5.4
 specifiers:
   '@types/estree': ^1.0.0
   '@types/node': ^18.11.18
-  albio: ^1.0.40
+  albio: ^1.0.46
   esbuild: ^0.16.17
   prettier: ^2.8.3
   rimraf: ^3.0.2
-  rollup: ^3.10.1
+  rollup: ^3.12.0
   tsup-node: ^0.1.0
   typescript: ^4.9.4
   vite: ^4.0.4
@@ -16,11 +16,11 @@ specifiers:
 devDependencies:
   '@types/estree': 1.0.0
   '@types/node': 18.11.18
-  albio: 1.0.40
+  albio: 1.0.46
   esbuild: 0.16.17
   prettier: 2.8.3
   rimraf: 3.0.2
-  rollup: 3.10.1
+  rollup: 3.12.0
   tsup-node: 0.1.0_typescript@4.9.4
   typescript: 4.9.4
   vite: 4.0.4_@types+node@18.11.18
@@ -255,8 +255,8 @@ packages:
     resolution: {integrity: sha512-DHQpWGjyQKSHj3ebjFI/wRKcqQcdR+MoFBygntYOZytCqNfkd2ZC4ARDJ2DQqhjH5p85Nnd3jhUJIXrszFX/JA==}
     dev: true
 
-  /albio/1.0.40:
-    resolution: {integrity: sha512-ZVMnkVn8Xopyjc/fku2xrVNDoeWkE5Ki3rvg1M/WkTdX1YD9M15E0YSr1wHbCTb/685t4Xkv6fiyAsjrzv/swg==}
+  /albio/1.0.46:
+    resolution: {integrity: sha512-Aa/7Bv5CJrH+aXFtxaOXgnW8W8JxhlVw7k2NFPJuq3d19o1XyoCRoFiQw5V7qUZYHZdIN8UtSW/S3dmlfWXhoA==}
     engines: {node: '>= 8'}
     dev: true
 
@@ -352,7 +352,7 @@ packages:
     dev: true
 
   /concat-map/0.0.1:
-    resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
+    resolution: {integrity: sha1-2Klr13/Wjfd5OnMDajug1UBdR3s=}
     dev: true
 
   /cross-spawn/7.0.3:
@@ -791,8 +791,8 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /rollup/3.10.1:
-    resolution: {integrity: sha512-3Er+yel3bZbZX1g2kjVM+FW+RUWDxbG87fcqFM5/9HbPCTpbVp6JOLn7jlxnNlbu7s/N/uDA4EV/91E2gWnxzw==}
+  /rollup/3.12.0:
+    resolution: {integrity: sha512-4MZ8kA2HNYahIjz63rzrMMRvDqQDeS9LoriJvMuV0V6zIGysP36e9t4yObUfwdT9h/szXoHQideICftcdZklWg==}
     engines: {node: '>=14.18.0', npm: '>=8.0.0'}
     hasBin: true
     optionalDependencies:
@@ -954,7 +954,7 @@ packages:
       esbuild: 0.16.17
       postcss: 8.4.21
       resolve: 1.22.1
-      rollup: 3.10.1
+      rollup: 3.12.0
     optionalDependencies:
       fsevents: 2.3.2
     dev: true

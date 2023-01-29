@@ -11,6 +11,8 @@ import path from 'path';
 import fs from 'fs';
 import { normalizePath } from 'vite';
 
+import { transformSync } from 'esbuild';
+
 export const entry_points: Entry[] = [];
 
 export const recordEntry = (code: string, ctx: string, root: string) => {
@@ -55,7 +57,7 @@ export const generateBase = (outDir: string, root: string, pkgData: Buffer) => {
     const finalCode = entry.compiler.astToString();
     fs.writeFileSync(
       path.join(root, outDir, entry.relativePath.replace('.html', '.js')),
-      finalCode,
+      transformSync(finalCode, { minify: true }).code,
     );
   });
   const assetsDir = path.join(root, outDir, 'assets');
