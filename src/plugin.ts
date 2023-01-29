@@ -10,15 +10,11 @@ export const albio = (opts: AlbioOptions = null): Plugin[] => [
   {
     name: 'vite:albio-preprocess',
     enforce: 'pre',
-    config: (config) => {
-      if (config.optimizeDeps) {
-        config.optimizeDeps.include
-          ? config.optimizeDeps.include.push('albio/internal')
-          : (config.optimizeDeps.include = ['albio/internal']);
-      } else {
-        config.optimizeDeps = { include: ['albio/internal'] };
-      }
-    },
+    config: () => ({
+      optimizeDeps: {
+        include: ['albio/internal'],
+      },
+    }),
     configResolved: (resolvedConfig) => {
       viteConfig = resolvedConfig;
     },

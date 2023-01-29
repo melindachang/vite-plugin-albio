@@ -8,7 +8,7 @@ import {
 } from 'albio/compiler';
 import { Entry } from './interfaces';
 import path from 'path';
-import { writeFileSync } from 'fs';
+import fs from 'fs';
 import { normalizePath } from 'vite';
 
 export const entry_points: Entry[] = [];
@@ -40,10 +40,6 @@ export const parseModule = (code: string, id: string) => {
           normalizePath(module.attribs['src'])
       ) {
         entry.script += code;
-        let { props, reactives, residuals } = extractScripts(getProgram(entry.script));
-        entry.compiler.props = props;
-        entry.compiler.reactives = reactives;
-        entry.compiler.residuals = residuals;
       }
     });
   });
@@ -51,10 +47,20 @@ export const parseModule = (code: string, id: string) => {
 
 export const generateBase = (outDir: string, root: string, pkgData: Buffer) => {
   entry_points.forEach((entry) => {
+    let { props, reactives, residuals } = extractScripts(getProgram(entry.script));
+    entry.compiler.props = props;
+    entry.compiler.reactives = reactives;
+    entry.compiler.residuals = residuals;
     entry.compiler.generate();
     const finalCode = entry.compiler.astToString();
-    writeFileSync(path.join(root, outDir, entry.relativePath.replace('.html', '.js')), finalCode);
+    fs.writeFileSync(
+      path.join(root, outDir, entry.relativePath.replace('.html', '.js')),
+      finalCode,
+    );
   });
-
-  writeFileSync(path.join(root, outDir, 'assets', 'albio_internal.js'), pkgData);
+  const assetsDir = path.join(root, outDir, 'assets');
+  if (!fs.existsSync(assetsDir)) {
+    fs.mkdirSync(assetsDir);
+  }
+  fs.writeFileSync(path.join(assetsDir, 'albio_internal.js'), pkgData);
 };
