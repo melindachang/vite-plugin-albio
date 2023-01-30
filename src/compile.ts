@@ -1,5 +1,7 @@
 import {
   Compiler,
+  Component,
+  EachBlockComponent,
   extractFragment,
   extractScripts,
   getProgram,
@@ -10,8 +12,8 @@ import { Entry } from './interfaces';
 import path from 'path';
 import fs from 'fs';
 import { normalizePath } from 'vite';
-
 import { transformSync } from 'esbuild';
+import { EachBlock } from 'albio/types/compiler/interfaces';
 
 export const entry_points: Entry[] = [];
 
@@ -20,13 +22,18 @@ export const recordEntry = (code: string, ctx: string, root: string) => {
   let { source, linkedModules } = parseCode(body.script);
   const { nodes, listeners } = parseHtml(body.tags);
   const relativePath = normalizePath(path.relative(root, ctx));
+  const blocks: Component[] = [];
+  body.blocks.forEach((b) => {
+    if (b.nodeType === 'each') blocks.push(new EachBlockComponent(b as EachBlock));
+  });
 
   const newEntry: Entry = {
     path: ctx,
     relativePath,
     script: source,
     modules: linkedModules,
-    compiler: new Compiler({ nodes, listeners }),
+    blocks,
+    compiler: new Compiler({ nodes, listeners, blocks }),
   };
 
   entry_points.push(newEntry);
