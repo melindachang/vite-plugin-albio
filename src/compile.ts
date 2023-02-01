@@ -1,5 +1,5 @@
 import {
-  Component,
+  BlockComponent,
   EachBlockComponent,
   extractFragment,
   extractScripts,
@@ -7,6 +7,7 @@ import {
   getProgram,
   parseCode,
   parseHtml,
+  Renderer,
 } from 'albio/compiler';
 import { Entry } from './interfaces';
 import path from 'path';
@@ -22,7 +23,7 @@ export const recordEntry = (code: string, ctx: string, root: string) => {
   let { source, linkedModules } = parseCode(body.script);
   const { nodes, listeners } = parseHtml(body.tags);
   const relativePath = normalizePath(path.relative(root, ctx));
-  const blocks: Component[] = [];
+  const blocks: BlockComponent[] = [];
   body.blocks.forEach((b) => {
     if (b.nodeType === 'each') blocks.push(new EachBlockComponent(b as EachBlock));
   });
@@ -33,7 +34,7 @@ export const recordEntry = (code: string, ctx: string, root: string) => {
     script: source,
     modules: linkedModules,
     blocks,
-    fragment: new Fragment({ nodes, listeners, blocks }),
+    fragment: new Fragment({ nodes, listeners }),
   };
 
   entry_points.push(newEntry);
@@ -60,8 +61,10 @@ export const generateBase = (outDir: string, root: string, pkgData: Buffer) => {
     entry.fragment.props = props;
     entry.fragment.reactives = reactives;
     entry.fragment.residuals = residuals;
-    entry.fragment.generate();
-    const finalCode = entry.fragment.astToString();
+
+    const renderer = new Renderer(entry.fragment, entry.blocks);
+    renderer.render_instance();
+    const finalCode = renderer.astToString();
     fs.writeFileSync(
       path.join(root, outDir, entry.relativePath.replace('.html', '.js')),
       transformSync(finalCode, { minify: true }).code,

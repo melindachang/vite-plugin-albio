@@ -1,11 +1,11 @@
-import { Element, Component, Fragment } from 'albio/compiler';
+import { Element, BlockComponent, Fragment } from 'albio/compiler';
 
 export interface Entry {
   path: string;
   relativePath: string;
   script: string;
   modules: Element[];
-  blocks: Component[];
+  blocks: BlockComponent[];
   fragment: Fragment;
 }
 
