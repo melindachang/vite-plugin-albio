@@ -1,9 +1,9 @@
 import {
-  Compiler,
   Component,
   EachBlockComponent,
   extractFragment,
   extractScripts,
+  Fragment,
   getProgram,
   parseCode,
   parseHtml,
@@ -33,7 +33,7 @@ export const recordEntry = (code: string, ctx: string, root: string) => {
     script: source,
     modules: linkedModules,
     blocks,
-    compiler: new Compiler({ nodes, listeners, blocks }),
+    fragment: new Fragment({ nodes, listeners, blocks }),
   };
 
   entry_points.push(newEntry);
@@ -57,11 +57,11 @@ export const parseModule = (code: string, id: string) => {
 export const generateBase = (outDir: string, root: string, pkgData: Buffer) => {
   entry_points.forEach((entry) => {
     let { props, reactives, residuals } = extractScripts(getProgram(entry.script));
-    entry.compiler.props = props;
-    entry.compiler.reactives = reactives;
-    entry.compiler.residuals = residuals;
-    entry.compiler.generate();
-    const finalCode = entry.compiler.astToString();
+    entry.fragment.props = props;
+    entry.fragment.reactives = reactives;
+    entry.fragment.residuals = residuals;
+    entry.fragment.generate();
+    const finalCode = entry.fragment.astToString();
     fs.writeFileSync(
       path.join(root, outDir, entry.relativePath.replace('.html', '.js')),
       transformSync(finalCode, { minify: true }).code,

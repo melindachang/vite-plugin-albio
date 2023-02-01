@@ -1,4 +1,4 @@
-import { Element, Compiler, Component } from 'albio/compiler';
+import { Element, Component, Fragment } from 'albio/compiler';
 
 export interface Entry {
   path: string;
@@ -6,7 +6,7 @@ export interface Entry {
   script: string;
   modules: Element[];
   blocks: Component[];
-  compiler: Compiler;
+  fragment: Fragment;
 }
 
 export type AlbioOptions = null | {};
