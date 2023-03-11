@@ -1,6 +1,6 @@
 {
   "name": "vite-plugin-albio",
-  "version": "1.0.27",
+  "version": "1.0.28",
   "description": "",
   "type": "module",
   "files": [
@@ -38,8 +38,6 @@
   "devDependencies": {
     "@types/estree": "^1.0.0",
     "@types/node": "^18.15.0",
-    "code-red": "^0.2.7",
-    "esbuild": "^0.16.17",
     "prettier": "^2.8.4",
     "rimraf": "^3.0.2",
     "rollup": "^3.19.1",
@@ -50,6 +48,8 @@
     "vitest": "^0.28.5"
   },
   "dependencies": {
-    "albio": "^1.0.49"
+    "albio": "^1.0.49",
+    "code-red": "^1.0.0",
+    "esbuild": "^0.17.11"
   }
 }
