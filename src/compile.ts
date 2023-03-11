@@ -8,7 +8,7 @@ import {
   parseCode,
   parseHtml,
   Renderer,
-  EachBlock,
+  EachBlock
 } from 'albio/compiler';
 import { Entry } from './interfaces';
 import path from 'path';
