@@ -3,7 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@types/estree': ^1.0.0
   '@types/node': ^18.15.0
-  albio: ^1.0.49
+  albio: ^1.0.52
   code-red: ^1.0.0
   esbuild: ^0.17.11
   prettier: ^2.8.4
@@ -16,7 +16,7 @@ specifiers:
   vitest: ^0.28.5
 
 dependencies:
-  albio: 1.0.49
+  albio: 1.0.52
   code-red: 1.0.0
   esbuild: 0.17.11
 
@@ -514,8 +514,8 @@ packages:
     engines: {node: '>=0.4.0'}
     hasBin: true
 
-  /albio/1.0.49:
-    resolution: {integrity: sha512-lnxcSILqlPfvTc2p/x4KxeJjOpbJvlqEBaEvID/Et5grhnuSIWVb54yoGaiPuP3LlpOmD3xg1Ok736qZjqiOsg==}
+  /albio/1.0.52:
+    resolution: {integrity: sha512-Vi+J7MO0K7zq0Cg+a2qdYDxZM++SJroX1k8ufhA1ZeJPSIKcJotSLOmHhqn1GU8lSRULm2N8pPHS1m/1BL1tqA==}
     engines: {node: '>= 8'}
     dev: false
 
