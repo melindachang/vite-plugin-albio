@@ -23,7 +23,7 @@ export const entry_points: Entry[] = [];
 export const recordEntry = (code: string, ctx: string, root: string) => {
   const body = extractFragment(code);
   let { source, linkedModules } = parseCode(body.script);
-  const { nodes, listeners } = parseHtml(body.tags);
+  const { nodes, listeners, references } = parseHtml(body.tags);
   const relativePath = normalizePath(path.relative(root, ctx));
   const blocks: BlockComponent[] = [];
   body.blocks.forEach((b) => {
@@ -36,7 +36,7 @@ export const recordEntry = (code: string, ctx: string, root: string) => {
     script: source,
     modules: linkedModules,
     blocks,
-    fragment: new Fragment({ nodes, listeners }),
+    fragment: new Fragment({ nodes, listeners, references }),
   };
 
   entry_points.push(newEntry);
@@ -90,12 +90,7 @@ export const generateBase = (outDir: string, root: string, pkgData: Buffer) => {
 
     fs.writeFileSync(
       path.join(root, outDir, entry.relativePath.replace('.html', '.js')),
-      transformSync(finalCode, { minify: true }).code,
+      transformSync(finalCode, { minify: false }).code,
     );
   });
-  // const assetsDir = path.join(root, outDir, 'assets');
-  // if (!fs.existsSync(assetsDir)) {
-  //   fs.mkdirSync(assetsDir);
-  // }
-  // fs.writeFileSync(path.join(assetsDir, 'albio_internal.js'), pkgData);
 };
