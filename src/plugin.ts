@@ -1,7 +1,7 @@
 import { Plugin, ResolvedConfig, optimizeDeps } from 'vite';
 import { AlbioOptions } from './interfaces';
 import fs from 'fs';
-import { generateBase, parseModule, recordEntry } from './compile';
+import { generate_base, parse_module, record_entry } from './compile';
 import { basename, extname } from 'path';
 
 let viteConfig: ResolvedConfig;
@@ -20,9 +20,9 @@ export const albio = (opts: AlbioOptions = null): Plugin[] => [
     },
     transform: (code: string, id: string): void => {
       if (id.endsWith('.html')) {
-        recordEntry(code, id, viteConfig.root);
+        record_entry(code, id, viteConfig.root);
       } else if (id.endsWith('.js')) {
-        parseModule(code, id);
+        parse_module(code, id);
       }
     },
     transformIndexHtml: (html, ctx): string => {
@@ -44,7 +44,7 @@ export const albio = (opts: AlbioOptions = null): Plugin[] => [
       const depMetadata = await optimizeDeps(viteConfig);
       fs.readFile(depMetadata.optimized['albio/internal'].file, (err, pkgData) => {
         try {
-          generateBase(
+          generate_base(
             viteConfig.build.outDir ? viteConfig.build.outDir : 'dist',
             viteConfig.root,
             pkgData,

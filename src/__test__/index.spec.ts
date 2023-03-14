@@ -1,8 +1,8 @@
 import { expect, test } from 'vitest';
-import { extractFragment } from 'albio/compiler';
+import { extract_fragment } from 'albio/compiler';
 
 test('should exclude head from tags', () => {
-  const { tags } = extractFragment(
+  const { tags } = extract_fragment(
     `<!DOCTYPE html>
     <html>
         <head>

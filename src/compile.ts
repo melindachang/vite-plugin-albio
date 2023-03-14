@@ -1,12 +1,12 @@
 import {
   BlockComponent,
   EachBlockComponent,
-  extractFragment,
-  extractScripts,
+  extract_fragment,
+  extract_scripts,
   Fragment,
-  getProgram,
-  parseCode,
-  parseHtml,
+  get_program,
+  parse_code,
+  parse_html,
   Renderer,
   EachBlock
 } from 'albio/compiler';
@@ -20,17 +20,17 @@ import { Program, Node } from 'estree';
 
 export const entry_points: Entry[] = [];
 
-export const recordEntry = (code: string, ctx: string, root: string) => {
-  const body = extractFragment(code);
-  let { source, linkedModules } = parseCode(body.script);
-  const { nodes, listeners, references } = parseHtml(body.tags);
+export const record_entry = (code: string, ctx: string, root: string) => {
+  const body = extract_fragment(code);
+  let { source, linkedModules } = parse_code(body.script);
+  const { nodes, listeners, references } = parse_html(body.tags);
   const relativePath = normalizePath(path.relative(root, ctx));
   const blocks: BlockComponent[] = [];
   body.blocks.forEach((b) => {
     if (b.nodeType === 'each') blocks.push(new EachBlockComponent(b as EachBlock));
   });
 
-  const newEntry: Entry = {
+  const entry: Entry = {
     path: ctx,
     relativePath,
     script: source,
@@ -39,10 +39,10 @@ export const recordEntry = (code: string, ctx: string, root: string) => {
     fragment: new Fragment({ nodes, listeners, references }),
   };
 
-  entry_points.push(newEntry);
+  entry_points.push(entry);
 };
 
-export const parseModule = (code: string, id: string) => {
+export const parse_module = (code: string, id: string) => {
   entry_points.forEach((entry) => {
     entry.modules.forEach((module) => {
       let i = Object.keys(module.attribs).findIndex((attr) => attr === 'src');
@@ -57,7 +57,7 @@ export const parseModule = (code: string, id: string) => {
   });
 };
 
-export const getDeclarations = (data: Buffer): Node[] => {
+export const get_declarations = (data: Buffer): Node[] => {
   const program = code_red.parse(data.toString(), {
     sourceType: 'module',
     ecmaVersion: 12,
@@ -75,18 +75,18 @@ export const getDeclarations = (data: Buffer): Node[] => {
   return declarations;
 };
 
-export const generateBase = (outDir: string, root: string, pkgData: Buffer) => {
+export const generate_base = (outDir: string, root: string, pkgData: Buffer) => {
   entry_points.forEach((entry) => {
-    let { props, reactives, residuals } = extractScripts(getProgram(entry.script));
+    let { props, reactives, residuals } = extract_scripts(get_program(entry.script));
     entry.fragment.props = props;
     entry.fragment.reactives = reactives;
     entry.fragment.residuals = residuals;
 
     const renderer = new Renderer(entry.fragment, entry.blocks);
     renderer.render_instance();
-    const declarations = getDeclarations(pkgData);
+    const declarations = get_declarations(pkgData);
 
-    const finalCode = code_red.print(declarations as any).code + renderer.astToString();
+    const finalCode = code_red.print(declarations as any).code + renderer.ast_to_string();
 
     fs.writeFileSync(
       path.join(root, outDir, entry.relativePath.replace('.html', '.js')),
