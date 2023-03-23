@@ -9,4 +9,11 @@ export interface Entry {
   fragment: Fragment;
 }
 
-export type AlbioOptions = null | {};
+export type AlbioOptions = null | {
+  hmrWatch?: string[];
+};
+
+export interface CompileData {
+  filename: string;
+  code: string;
+}

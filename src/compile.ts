@@ -8,9 +8,9 @@ import {
   parse_code,
   parse_html,
   Renderer,
-  EachBlock
+  EachBlock,
 } from 'albio/compiler';
-import { Entry } from './interfaces';
+import { CompileData, Entry } from './interfaces';
 import path from 'path';
 import fs from 'fs';
 import { normalizePath } from 'vite';
@@ -18,9 +18,7 @@ import { transformSync } from 'esbuild';
 import * as code_red from 'code-red';
 import { Program, Node } from 'estree';
 
-export const entry_points: Entry[] = [];
-
-export const record_entry = (code: string, ctx: string, root: string) => {
+export const record_entry = (entry_points: Entry[], code: string, ctx: string, root: string) => {
   const body = extract_fragment(code);
   let { source, linkedModules } = parse_code(body.script);
   const { nodes, listeners, references } = parse_html(body.tags);
@@ -42,7 +40,7 @@ export const record_entry = (code: string, ctx: string, root: string) => {
   entry_points.push(entry);
 };
 
-export const parse_module = (code: string, id: string) => {
+export const parse_module = (entry_points: Entry[], code: string, id: string) => {
   entry_points.forEach((entry) => {
     entry.modules.forEach((module) => {
       let i = Object.keys(module.attribs).findIndex((attr) => attr === 'src');
@@ -75,22 +73,31 @@ export const get_declarations = (data: Buffer): Node[] => {
   return declarations;
 };
 
-export const generate_base = (outDir: string, root: string, pkgData: Buffer) => {
+export const generate_final_code = (entry: Entry, pkgData: Buffer): CompileData => {
+  let { props, reactives, residuals } = extract_scripts(get_program(entry.script));
+  entry.fragment.props = props;
+  entry.fragment.reactives = reactives;
+  entry.fragment.residuals = residuals;
+
+  const renderer = new Renderer(entry.fragment, entry.blocks);
+  renderer.render_instance();
+  const declarations = get_declarations(pkgData);
+
+  const finalCode = code_red.print(declarations as any).code + renderer.ast_to_string();
+  return { code: finalCode, filename: entry.relativePath.replace('.html', '.js') };
+};
+
+export const generate_base = (
+  entry_points: Entry[],
+  outDir: string,
+  root: string,
+  pkgData: Buffer,
+) => {
   entry_points.forEach((entry) => {
-    let { props, reactives, residuals } = extract_scripts(get_program(entry.script));
-    entry.fragment.props = props;
-    entry.fragment.reactives = reactives;
-    entry.fragment.residuals = residuals;
-
-    const renderer = new Renderer(entry.fragment, entry.blocks);
-    renderer.render_instance();
-    const declarations = get_declarations(pkgData);
-
-    const finalCode = code_red.print(declarations as any).code + renderer.ast_to_string();
-
+    const finalCode = generate_final_code(entry, pkgData);
     fs.writeFileSync(
-      path.join(root, outDir, entry.relativePath.replace('.html', '.js')),
-      transformSync(finalCode, { minify: false }).code,
+      path.join(root, outDir, finalCode.filename),
+      transformSync(finalCode.code, { minify: true }).code,
     );
   });
 };
