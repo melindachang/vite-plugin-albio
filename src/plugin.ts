@@ -1,27 +1,30 @@
-import { Plugin, ResolvedConfig, optimizeDeps } from 'vite';
+import { Plugin, ResolvedConfig, optimizeDeps, normalizePath } from 'vite';
 import { AlbioOptions, Entry } from './interfaces';
 import fs from 'fs';
 import { generate_base, generate_final_code, parse_module, record_entry } from './compile';
-import path, { basename, extname } from 'path';
+import { basename, extname } from 'path';
 import { handleHotReload } from './handle-hot-reload';
 import { VitePluginAlbioCache } from './utils/vite-plugin-albio-cache';
 
+
 export const albio = (opts: AlbioOptions = null): Plugin[] => {
   let viteConfig: ResolvedConfig;
+  let pkgData: Buffer;
   const cache = new VitePluginAlbioCache();
   const entry_points: Entry[] = [];
   const plugins: Plugin[] = [
     {
       name: 'vite:albio-preprocess',
-      // apply: 'build',
       enforce: 'pre',
       config: () => ({
         optimizeDeps: {
           include: ['albio/internal'],
         },
       }),
-      configResolved: (resolvedConfig) => {
+      configResolved: async (resolvedConfig) => {
         viteConfig = resolvedConfig;
+        const depMetadata = await optimizeDeps(viteConfig);
+        pkgData = fs.readFileSync(depMetadata.optimized['albio/internal'].file);
       },
       transform: (code: string, id: string): void => {
         if (id.endsWith('.html')) {
@@ -47,46 +50,28 @@ export const albio = (opts: AlbioOptions = null): Plugin[] => {
       apply: 'build',
       enforce: 'post',
       closeBundle: async (): Promise<void> => {
-        const depMetadata = await optimizeDeps(viteConfig);
-        fs.readFile(depMetadata.optimized['albio/internal'].file, (err, pkgData) => {
-          try {
-            generate_base(
-              entry_points,
-              viteConfig.build.outDir ? viteConfig.build.outDir : 'dist',
-              viteConfig.root,
-              pkgData,
-            );
-          } catch {
-            console.log(err);
-          }
-        });
+        generate_base(
+          entry_points,
+          viteConfig.build.outDir || normalizePath('dist'),
+          viteConfig.root,
+          pkgData,
+        );
       },
     },
     {
       name: 'vite:albio-dev-postprocess',
       apply: 'serve',
-      // configResolved: (resolvedConfig) => {
-      //   viteConfig = resolvedConfig;
-      // },
       closeBundle: async (): Promise<void> => {
-        const depMetadata = await optimizeDeps(viteConfig);
-        const pkgData = fs.readFileSync(depMetadata.optimized['albio/internal'].file);
-
         entry_points.forEach((entry) => {
           const finalCode = generate_final_code(entry, pkgData);
           cache.update(entry, finalCode);
         });
       },
-      handleHotUpdate: async (ctx) => {
-        handleHotReload(cache, entry_points, ctx);
+      handleHotUpdate: async (ctx): Promise<void> => {
+        handleHotReload(cache, entry_points, ctx, pkgData);
       },
     },
   ];
 
   return plugins;
 };
-
-/**
- * On serve: Run all of the compile stuff but take the transformed code and cache it somewhere instead
- *
- */

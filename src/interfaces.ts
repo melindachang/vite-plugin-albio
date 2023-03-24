@@ -3,10 +3,11 @@ import { Element, BlockComponent, Fragment } from 'albio/compiler';
 export interface Entry {
   path: string;
   relativePath: string;
-  script: string;
+  script: CompileData[];
   modules: Element[];
   blocks: BlockComponent[];
   fragment: Fragment;
+  module_paths?: string[];
 }
 
 export type AlbioOptions = null | {
@@ -14,6 +15,6 @@ export type AlbioOptions = null | {
 };
 
 export interface CompileData {
-  filename: string;
+  assoc: string;
   code: string;
 }

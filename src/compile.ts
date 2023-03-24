@@ -31,28 +31,31 @@ export const record_entry = (entry_points: Entry[], code: string, ctx: string, r
   const entry: Entry = {
     path: ctx,
     relativePath,
-    script: source,
+    script: [{ assoc: 'source', code: source }],
     modules: linkedModules,
     blocks,
     fragment: new Fragment({ nodes, listeners, references }),
   };
+
+  populate_paths(entry);
 
   entry_points.push(entry);
 };
 
 export const parse_module = (entry_points: Entry[], code: string, id: string) => {
   entry_points.forEach((entry) => {
-    entry.modules.forEach((module) => {
-      let i = Object.keys(module.attribs).findIndex((attr) => attr === 'src');
-      if (
-        i > -1 &&
-        normalizePath(path.relative(path.dirname(entry.path), id)) ===
-          normalizePath(module.attribs['src'])
-      ) {
-        entry.script += code;
+    entry.module_paths?.forEach((entry_path) => {
+      if (normalizePath(path.relative(path.dirname(entry.path), id)) === entry_path) {
+        entry.script.push({ assoc: entry_path, code });
       }
     });
   });
+};
+
+export const populate_paths = (entry_point: Entry) => {
+  entry_point.module_paths = entry_point.modules
+    .filter((m) => Object.keys(m.attribs).find((attr) => attr === 'src'))
+    .map((m) => normalizePath(m.attribs['src']));
 };
 
 export const get_declarations = (data: Buffer): Node[] => {
@@ -74,7 +77,9 @@ export const get_declarations = (data: Buffer): Node[] => {
 };
 
 export const generate_final_code = (entry: Entry, pkgData: Buffer): CompileData => {
-  let { props, reactives, residuals } = extract_scripts(get_program(entry.script));
+  let { props, reactives, residuals } = extract_scripts(
+    get_program(entry.script.map((script) => script.code).join('\n')),
+  );
   entry.fragment.props = props;
   entry.fragment.reactives = reactives;
   entry.fragment.residuals = residuals;
@@ -84,7 +89,7 @@ export const generate_final_code = (entry: Entry, pkgData: Buffer): CompileData 
   const declarations = get_declarations(pkgData);
 
   const finalCode = code_red.print(declarations as any).code + renderer.ast_to_string();
-  return { code: finalCode, filename: entry.relativePath.replace('.html', '.js') };
+  return { code: finalCode, assoc: entry.relativePath.replace('.html', '.js') };
 };
 
 export const generate_base = (
@@ -96,7 +101,7 @@ export const generate_base = (
   entry_points.forEach((entry) => {
     const finalCode = generate_final_code(entry, pkgData);
     fs.writeFileSync(
-      path.join(root, outDir, finalCode.filename),
+      path.join(root, outDir, finalCode.assoc),
       transformSync(finalCode.code, { minify: true }).code,
     );
   });
